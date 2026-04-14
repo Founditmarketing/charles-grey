@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Resend } from 'resend';
 
 const app = express();
 app.use(cors());
@@ -37,6 +39,46 @@ app.post('/api/chat', async (req, res) => {
   } catch (error) {
     console.error('Gemini Error:', error);
     res.status(500).json({ error: 'Failed to communicate with AI Estimator.' });
+  }
+});
+
+// ─── Send Contact Email ────────────────────────────────────────────────────
+app.post('/api/send-contact', async (req, res) => {
+  const { name, email, phone, projectType, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Name, email, and message are required.' });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Please provide a valid email address.' });
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Charles Grey Construction <hello@charlesgreyconstruction.com>',
+      to: ['admin@charlesgreyconstruction.com'],
+      reply_to: email,
+      subject: `New Contact Form Submission – ${projectType || 'General Inquiry'} from ${name}`,
+      html: `<p><strong>Name:</strong> ${name}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+             <p><strong>Project Type:</strong> ${projectType || 'N/A'}</p>
+             <p><strong>Message:</strong><br/>${message}</p>`,
+    });
+
+    if (error) {
+      console.error('Resend Error:', error);
+      return res.status(500).json({ error: 'Failed to send email.' });
+    }
+
+    return res.status(200).json({ success: true, id: data.id });
+  } catch (err) {
+    console.error('Send Contact Error:', err);
+    return res.status(500).json({ error: 'Internal server error.' });
   }
 });
 

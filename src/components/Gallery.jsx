@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { seoCities } from '../data/seoCities';
 import { Phone, Mail, ShieldCheck } from 'lucide-react';
-import { ContactForm } from './Contact';
+import { ContactForm, ContactFormTraditional } from './Contact';
 
 export function Gallery() {
   const [lightboxImg, setLightboxImg] = useState(null);
@@ -60,6 +60,8 @@ export function Gallery() {
 }
 
 export function CTA() {
+  const [activeTab, setActiveTab] = useState('form');
+
   return (
     <section className="conversion-block" id="contact">
       
@@ -101,7 +103,7 @@ export function CTA() {
 
           <div className="conv-badges">
             <div className="conv-badge">
-              <ShieldCheck size={16} /> Licensed & Insured
+              <ShieldCheck size={16} /> Licensed &amp; Insured
             </div>
             <div className="conv-badge">
               <ShieldCheck size={16} /> 488 Corporate Dr, Houma LA
@@ -109,9 +111,28 @@ export function CTA() {
           </div>
         </div>
 
-        {/* Desktop-only inline AI chat */}
+        {/* Desktop-only tabbed contact panel */}
         <div className="conv-chat-desktop">
-          <ContactForm />
+          <div className="contact-tabs">
+            <button
+              className={`contact-tab${activeTab === 'form' ? ' active' : ''}`}
+              onClick={() => setActiveTab('form')}
+              type="button"
+            >
+              Send a Message
+            </button>
+            <button
+              className={`contact-tab${activeTab === 'ai' ? ' active' : ''}`}
+              onClick={() => setActiveTab('ai')}
+              type="button"
+            >
+              AI Estimator
+            </button>
+          </div>
+
+          <div className="contact-panel">
+            {activeTab === 'form' ? <ContactFormTraditional /> : <ContactForm />}
+          </div>
         </div>
       </div>
     </section>

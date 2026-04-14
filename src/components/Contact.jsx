@@ -1,6 +1,189 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, CheckCircle, Bot, User } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Send, CheckCircle, Bot, User, Loader2, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// ─── Traditional Contact Form (Resend-powered) ─────────────────────────────
+export function ContactFormTraditional() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    projectType: '',
+    message: '',
+  });
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const projectTypes = [
+    'Residential Build',
+    'Commercial Metal Building',
+    'Restaurant Build-out',
+    'Renovation / Remodel',
+    'Other',
+  ];
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/send-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
+      setStatus('success');
+      setFormData({ name: '', email: '', phone: '', projectType: '', message: '' });
+    } catch (err) {
+      setErrorMsg(err.message);
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="contact-success"
+      >
+        <CheckCircle size={48} color="var(--accent)" strokeWidth={1.5} />
+        <h3>Message Received</h3>
+        <p>
+          Thank you for reaching out. A member of the Charles Grey team will be in touch with you
+          shortly — typically within one business day.
+        </p>
+        <button
+          className="btn-outline"
+          onClick={() => setStatus('idle')}
+        >
+          Send Another Message
+        </button>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form className="contact-form-traditional" onSubmit={handleSubmit} noValidate>
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="cf-name">Full Name <span className="required">*</span></label>
+          <input
+            id="cf-name"
+            name="name"
+            type="text"
+            placeholder="John Smith"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            disabled={status === 'loading'}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="cf-email">Email Address <span className="required">*</span></label>
+          <input
+            id="cf-email"
+            name="email"
+            type="email"
+            placeholder="john@example.com"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            disabled={status === 'loading'}
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="cf-phone">Phone Number</label>
+          <input
+            id="cf-phone"
+            name="phone"
+            type="tel"
+            placeholder="(985) 555-0100"
+            value={formData.phone}
+            onChange={handleChange}
+            disabled={status === 'loading'}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="cf-project">Project Type</label>
+          <select
+            id="cf-project"
+            name="projectType"
+            value={formData.projectType}
+            onChange={handleChange}
+            disabled={status === 'loading'}
+          >
+            <option value="">Select a project type…</option>
+            {projectTypes.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="cf-message">Message <span className="required">*</span></label>
+        <textarea
+          id="cf-message"
+          name="message"
+          rows={5}
+          placeholder="Tell us about your project — scope, timeline, location, and any other details that will help us provide an accurate estimate."
+          value={formData.message}
+          onChange={handleChange}
+          required
+          disabled={status === 'loading'}
+        />
+      </div>
+
+      <AnimatePresence>
+        {status === 'error' && (
+          <motion.div
+            className="form-error"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <AlertCircle size={16} />
+            <span>{errorMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        type="submit"
+        className="btn-primary form-submit-btn"
+        disabled={status === 'loading'}
+      >
+        {status === 'loading' ? (
+          <>
+            <Loader2 size={18} className="spin" />
+            Sending…
+          </>
+        ) : (
+          <>
+            Send Message
+            <Send size={16} />
+          </>
+        )}
+      </button>
+    </form>
+  );
+}
 
 export function ContactForm() {
   const [messages, setMessages] = useState([
