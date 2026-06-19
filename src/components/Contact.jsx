@@ -209,14 +209,11 @@ export function ContactForm() {
     const txt = textOverride || inputMessage;
     if (!txt.trim()) return;
 
+    // Quick-option buttons (project_type) only render on the first turn; any
+    // other send — first or subsequent — is a typed message.
     window.dataLayer = window.dataLayer || [];
-    if (messages.length === 1) {
-      // First user interaction — distinguish project selection from free-text
-      if (textOverride) {
-        window.dataLayer.push({ event: 'ai_estimator_project_selected', project_type: textOverride });
-      } else {
-        window.dataLayer.push({ event: 'ai_estimator_message_sent' });
-      }
+    if (textOverride) {
+      window.dataLayer.push({ event: 'ai_estimator_project_selected', project_type: textOverride });
     } else {
       window.dataLayer.push({ event: 'ai_estimator_message_sent' });
     }
