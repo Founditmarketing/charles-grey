@@ -6,6 +6,12 @@ import { ContactForm } from './Contact';
 export function FloatingChat() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const openChat = () => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'ai_estimator_opened_floating' });
+    setIsOpen(true);
+  };
+
   return (
     <>
       {/* Floating AI Bubble */}
@@ -13,7 +19,7 @@ export function FloatingChat() {
         {!isOpen && (
           <motion.button
             className="fab-chat"
-            onClick={() => setIsOpen(true)}
+            onClick={openChat}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
