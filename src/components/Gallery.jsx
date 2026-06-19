@@ -62,6 +62,14 @@ export function Gallery() {
 export function CTA() {
   const [activeTab, setActiveTab] = useState('form');
 
+  const handleTabSwitch = (tab) => {
+    if (tab === 'ai' && activeTab !== 'ai') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'ai_estimator_opened' });
+    }
+    setActiveTab(tab);
+  };
+
   return (
     <section className="conversion-block" id="contact">
       
@@ -116,14 +124,14 @@ export function CTA() {
           <div className="contact-tabs">
             <button
               className={`contact-tab${activeTab === 'form' ? ' active' : ''}`}
-              onClick={() => setActiveTab('form')}
+              onClick={() => handleTabSwitch('form')}
               type="button"
             >
               Send a Message
             </button>
             <button
               className={`contact-tab${activeTab === 'ai' ? ' active' : ''}`}
-              onClick={() => setActiveTab('ai')}
+              onClick={() => handleTabSwitch('ai')}
               type="button"
             >
               AI Estimator

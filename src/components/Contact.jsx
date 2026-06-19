@@ -209,6 +209,18 @@ export function ContactForm() {
     const txt = textOverride || inputMessage;
     if (!txt.trim()) return;
 
+    window.dataLayer = window.dataLayer || [];
+    if (messages.length === 1) {
+      // First user interaction — distinguish project selection from free-text
+      if (textOverride) {
+        window.dataLayer.push({ event: 'ai_estimator_project_selected', project_type: textOverride });
+      } else {
+        window.dataLayer.push({ event: 'ai_estimator_message_sent' });
+      }
+    } else {
+      window.dataLayer.push({ event: 'ai_estimator_message_sent' });
+    }
+
     setMessages(prev => [...prev, { role: 'user', text: txt }]);
     setInputMessage("");
     setIsTyping(true);
