@@ -175,7 +175,7 @@ export function Footer() {
         </div>
         <div className="footer-col">
           <h5>Contact</h5>
-          <a href="mailto:quotes@charlesgrey.com">quotes@charlesgrey.com</a>
+          <a href="mailto:admin@charlesgreyconstruction.com">admin@charlesgreyconstruction.com</a>
           <a href="tel:9858606725">985-860-6725</a>
         </div>
       </div>

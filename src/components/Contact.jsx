@@ -376,7 +376,7 @@ export function SocialProof() {
         "@context": "https://schema.org",
         "@type": "GeneralContractor",
         "name": "Charles Grey Construction LLC",
-        "image": "https://charlesgreyconstruction.com/hero-poster.png",
+        "image": "https://www.charlesgreyconstruction.com/hero-poster.png",
         "telephone": "985-860-6725",
         "address": {
           "@type": "PostalAddress",
