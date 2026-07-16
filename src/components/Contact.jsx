@@ -388,10 +388,10 @@ export function SocialProof() {
         },
         "aggregateRating": {
           "@type": "AggregateRating",
-          "ratingValue": "5.0",
+          "ratingValue": "4.6",
           "bestRating": "5",
           "worstRating": "1",
-          "ratingCount": "27"
+          "ratingCount": "22"
         },
         "priceRange": "$$$$"
       })}} />
