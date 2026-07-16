@@ -45,6 +45,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Found It Lead Capture -->
     <script src="https://found-it-crm-flax.vercel.app/embed/lead-capture.js" data-account="fe81b366-6c89-409c-bac4-03af5a91a089" async></script>
+    <!-- Site-wide Organization schema (present on every route, distinct from the
+         per-location GeneralContractor schema on service-area pages) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Charles Grey Construction",
+      "legalName": "Charles Grey Construction LLC",
+      "url": "https://www.charlesgreyconstruction.com/",
+      "logo": "https://www.charlesgreyconstruction.com/charlesgreynewlogo.png",
+      "telephone": "985-860-6725",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "488 Corporate Dr #11",
+        "addressLocality": "Houma",
+        "addressRegion": "LA",
+        "postalCode": "70360",
+        "addressCountry": "US"
+      },
+      "priceRange": "$$$$"
+    }
+    </script>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
