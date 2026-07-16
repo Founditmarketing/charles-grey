@@ -5,13 +5,14 @@ import { useLocalSEO } from '../hooks/useLocalSEO';
 import { WhyUs, Stats } from '../components/WhyUs';
 import { Services } from '../components/Services';
 import { CTA } from '../components/Gallery';
+import { PageSEO } from '../components/PageSEO';
 
 export function CitySEOPage() {
   const { citySlug } = useParams();
-  
+
   // Find the requested city in our SEO database
   const cityData = seoCities.find(c => c.slug === citySlug);
-  
+
   // Activate the native dynamic SEO injection
   useLocalSEO(cityData);
 
@@ -22,7 +23,12 @@ export function CitySEOPage() {
 
   return (
     <main className="page-padding">
-      
+      <PageSEO
+        title={`General Contractor in ${cityData.name}, ${cityData.state}`}
+        description={cityData.description}
+        path={`/service-areas/${cityData.slug}`}
+      />
+
       {/* Hyper-Localized Header */}
       <section className="section" style={{ background: 'var(--bg-elevated)', paddingTop: '160px' }}>
         <motion.div 

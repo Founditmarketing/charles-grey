@@ -1,21 +1,11 @@
 import { useEffect } from 'react';
 
+// Injects the per-city GeneralContractor JSON-LD schema. Title/description/
+// canonical for city pages are owned by <PageSEO> (see CitySEOPage.jsx).
 export function useLocalSEO(cityData) {
   useEffect(() => {
     if (!cityData) return;
 
-    // 1. Inject Standard Meta Tags
-    document.title = `General Contractor in ${cityData.name}, ${cityData.state} | Charles Grey Construction`;
-    
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.name = "description";
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.content = cityData.description;
-
-    // 2. Inject LocalBusiness JSON-LD Schema explicitly formatted for Google
     const schema = {
       "@context": "https://schema.org",
       "@type": "GeneralContractor",
@@ -50,7 +40,6 @@ export function useLocalSEO(cityData) {
 
     // Cleanup when returning to normal pages
     return () => {
-      document.title = "Charles Grey Construction | Fast, High-Quality Builder";
       if (script) script.remove();
     };
   }, [cityData]);
